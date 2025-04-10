@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Login</h4>
+      </div>
+      <div class="card-body">
+        <% if (error) { %>
+          <div class="alert alert-danger" role="alert">
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <ul class="nav nav-tabs mb-4" id="loginTabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="customer-tab" data-toggle="tab" href="#customer" role="tab">Customer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="seller-tab" data-toggle="tab" href="#seller" role="tab">Seller</a>
+          </li>
+        </ul>
+        
+        <div class="tab-content" id="loginTabContent">
+          <!-- Customer Login Form -->
+          <div class="tab-pane fade show active" id="customer" role="tabpanel">
+            <form action="/login/customer" method="POST">
+              <div class="form-group">
+                <label for="uid">Customer ID</label>
+                <input type="text" class="form-control" id="uid" name="uid" required placeholder="Enter your customer ID">
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <div class="text-center mt-3">
+              <p>Don't have an account? <a href="/register">Register here</a></p>
+            </div>
+          </div>
+          
+          <!-- Seller Login Form -->
+          <div class="tab-pane fade" id="seller" role="tabpanel">
+            <form action="/login/seller" method="POST">
+              <div class="form-group">
+                <label for="sid">Seller ID</label>
+                <input type="text" class="form-control" id="sid" name="sid" required placeholder="Enter your seller ID">
+              </div>
+              <div class="form-group">
+                <label for="sellerPassword">Password</label>
+                <input type="password" class="form-control" id="sellerPassword" name="password" required placeholder="Enter your password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <div class="text-center mt-3">
+              <p>Don't have a seller account? <a href="/seller/register">Register as Seller</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

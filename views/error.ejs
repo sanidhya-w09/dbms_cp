@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+          <h4 class="mb-0">Error</h4>
+        </div>
+        <div class="card-body text-center">
+          <div class="mb-4">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 9L9 15" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 9L15 15" stroke="#dc3545" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <h3 class="mb-3">An error has occurred</h3>
+          <p class="lead mb-4"><%= message || 'Something went wrong!' %></p>
+          
+          <div class="mt-4">
+            <% if (typeof backUrl === 'string') { %>
+              <a href="<%= backUrl %>" class="btn btn-outline-secondary">Go Back</a>
+            <% } else if (typeof user !== 'undefined' && user) { %>
+              <% if (user.userType === 'customer') { %>
+                <a href="/homepage" class="btn btn-outline-primary">Back to Homepage</a>
+              <% } else if (user.userType === 'seller') { %>
+                <a href="/seller/homepage" class="btn btn-outline-primary">Back to Dashboard</a>
+              <% } %>
+            <% } else { %>
+              <a href="/" class="btn btn-outline-primary">Back to Home</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

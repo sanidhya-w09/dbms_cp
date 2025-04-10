@@ -1,0 +1,89 @@
+<%- include('partials/header') %>
+
+<div class="row">
+  <!-- Product Details Card -->
+  <div class="col-md-6">
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h3 class="card-title"><%= product.pname %></h3>
+      </div>
+      <div class="card-body">
+        <p class="card-text">
+          <strong>Manufacturer:</strong> <%= product.manufacturer %><br>
+          <strong>Price:</strong> $<%= product.price %><br>
+          <strong>Manufacturing Date:</strong> <%= new Date(product.mfg).toLocaleDateString() %><br>
+          <strong>Expiry Date:</strong> <%= new Date(product.exp).toLocaleDateString() %>
+        </p>
+        <div class="alert alert-info">
+          <% 
+            let totalStock = 0;
+            product.inventories.forEach(inv => {
+              totalStock += inv.quantity;
+            });
+          %>
+          <strong>Total Available Stock:</strong> <%= totalStock %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Purchase Form Card -->
+  <div class="col-md-6">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Purchase Form</h4>
+      </div>
+      <div class="card-body">
+        <form action="/place-order" method="POST">
+          <input type="hidden" name="pid" value="<%= product.pid %>">
+          
+          <% if (product.inventories.length > 1) { %>
+            <div class="form-group">
+              <label for="sid">Select Seller:</label>
+              <select class="form-control" id="sid" name="sid" required>
+                <% product.inventories.forEach(inv => { %>
+                  <option value="<%= inv.sid %>">Seller ID: <%= inv.sid %> (Available: <%= inv.quantity %>)</option>
+                <% }) %>
+              </select>
+            </div>
+          <% } else { %>
+            <input type="hidden" name="sid" value="<%= product.inventories[0].sid %>">
+          <% } %>
+          
+          <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="<%= totalStock %>" value="1" required>
+          </div>
+          
+          <div class="form-group">
+            <label>Total Price:</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input type="text" class="form-control" id="totalPrice" value="<%= product.price %>" readonly>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn btn-success btn-block">Confirm Purchase</button>
+          </div>
+        </form>
+        
+        <a href="/homepage" class="btn btn-outline-secondary btn-block mt-3">Back to Products</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Calculate total price based on quantity
+  document.getElementById('quantity').addEventListener('input', function(e) {
+    const quantity = parseInt(e.target.value);
+    const price = <%= product.price %>;
+    const totalPrice = (quantity * price).toFixed(2);
+    document.getElementById('totalPrice').value = totalPrice;
+  });
+</script>
+
+<%- include('partials/footer') %>

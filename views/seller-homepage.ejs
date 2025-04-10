@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Welcome, <%= user.name %></h2>
+  <div>
+    <a href="/seller/add-product" class="btn btn-success">Add New Product</a>
+    <a href="/seller/orders" class="btn btn-info ml-2">View Orders</a>
+  </div>
+</div>
+
+<div class="card shadow mb-4">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0">Your Inventory</h4>
+  </div>
+  <div class="card-body">
+    <% if (inventory && inventory.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Name</th>
+              <th>Manufacturer</th>
+              <th>Manufacturing Date</th>
+              <th>Expiry Date</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% inventory.forEach(item => { %>
+              <tr>
+                <td><%= item.pid %></td>
+                <td><%= item.pname %></td>
+                <td><%= item.product.manufacturer %></td>
+                <td><%= new Date(item.product.mfg).toLocaleDateString() %></td>
+                <td><%= new Date(item.product.exp).toLocaleDateString() %></td>
+                <td>$<%= item.product.price.toFixed(2) %></td> <!-- Price formatted -->
+                <td><%= item.quantity %></td>
+                <td>
+                  <a href="/seller/update-inventory/<%= item.pid %>" class="btn btn-sm btn-warning hover-shadow">Update Stock</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="alert alert-info text-center">
+        <h4>No inventory items found.</h4>
+        <p>Add new products to your inventory to get started.</p>
+        <a href="/seller/add-product" class="btn btn-primary mt-2">Add Product</a>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+
+<!-- Optional: Add CSS for hover effect (optional customization) -->
+<style>
+  .hover-shadow:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+</style>
