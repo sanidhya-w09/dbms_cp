@@ -10,7 +10,7 @@
       <div class="card-body">
         <p class="card-text">
           <strong>Manufacturer:</strong> <%= product.manufacturer %><br>
-          <strong>Price:</strong> $<%= product.price %><br>
+          <strong>Price:</strong> ₹<%= product.price %><br>
           <strong>Manufacturing Date:</strong> <%= new Date(product.mfg).toLocaleDateString() %><br>
           <strong>Expiry Date:</strong> <%= new Date(product.exp).toLocaleDateString() %>
         </p>
@@ -59,7 +59,7 @@
             <label>Total Price:</label>
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text">$</span>
+                <span class="input-group-text">₹</span>
               </div>
               <input type="text" class="form-control" id="totalPrice" value="<%= product.price %>" readonly>
             </div>

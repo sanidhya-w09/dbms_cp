@@ -29,15 +29,22 @@
             </tr>
           </thead>
           <tbody>
-            <% inventory.forEach(item => { %>
-              <tr>
+            <% inventory.forEach(item => { 
+              const isLowStock = item.quantity < 20;
+            %>
+              <tr class="<%= isLowStock ? 'table-danger' : '' %>">
                 <td><%= item.pid %></td>
                 <td><%= item.pname %></td>
                 <td><%= item.product.manufacturer %></td>
                 <td><%= new Date(item.product.mfg).toLocaleDateString() %></td>
                 <td><%= new Date(item.product.exp).toLocaleDateString() %></td>
-                <td>$<%= item.product.price.toFixed(2) %></td> <!-- Price formatted -->
-                <td><%= item.quantity %></td>
+                <td>₹<%= item.product.price.toFixed(2) %></td>
+                <td>
+                  <%= item.quantity %>
+                  <% if (isLowStock) { %>
+                    <span class="badge badge-danger ml-2">Low Stock</span>
+                  <% } %>
+                </td>
                 <td>
                   <a href="/seller/update-inventory/<%= item.pid %>" class="btn btn-sm btn-warning hover-shadow">Update Stock</a>
                 </td>
@@ -58,9 +65,15 @@
 
 <%- include('partials/footer') %>
 
-<!-- Optional: Add CSS for hover effect (optional customization) -->
 <style>
   .hover-shadow:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .badge-danger {
+    background-color: #dc3545;
+    color: white;
+    font-size: 0.75rem;
+    padding: 3px 7px;
+    border-radius: 4px;
   }
 </style>

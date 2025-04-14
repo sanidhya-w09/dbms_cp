@@ -17,7 +17,7 @@
           <h5><%= inventory.product.pname %> (ID: <%= inventory.pid %>)</h5>
           <p>
             <strong>Current Stock:</strong> <%= inventory.quantity %> units<br>
-            <strong>Price:</strong> $<%= inventory.product.price %><br>
+            <strong>Price:</strong> ₹<%= inventory.product.price %><br>
             <strong>Expiry Date:</strong> <%= new Date(inventory.product.exp).toLocaleDateString() %>
           </p>
         </div>

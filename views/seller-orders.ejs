@@ -11,6 +11,27 @@
   </div>
   <div class="card-body">
     <% if (orders && orders.length > 0) { %>
+
+      <!-- Total Revenue Display -->
+      <div class="mb-4 text-center">
+        <% let totalRevenue = 0;
+           orders.forEach(order => {
+             if (order.product) {
+               totalRevenue += order.quantity * order.product.price;
+             }
+           });
+        %>
+        <h5><strong>Total Revenue:</strong> ₹<%= totalRevenue.toFixed(2) %></h5>
+      </div>
+
+      <!-- Revenue Chart -->
+      <div class="mb-4 text-center">
+        <h6 class="mb-3">Revenue by Product</h6>
+        <div style="max-width: 500px; height: 250px; margin: 0 auto;">
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+
       <div class="table-responsive">
         <table class="table table-striped">
           <thead>
@@ -28,21 +49,18 @@
             <% orders.forEach(order => { %>
               <tr>
                 <td><%= order.oid %></td>
-                <td>
-                  <%= order.customer ? `${order.customer.fname} ${order.customer.lname}` : 'Unknown' %>
-                </td>
-                <td>
-                  <%= order.product ? order.product.pname : 'Unknown' %>
-                </td>
+                <td><%= order.customer ? `${order.customer.fname} ${order.customer.lname}` : 'Unknown' %></td>
+                <td><%= order.product ? order.product.pname : 'Unknown' %></td>
                 <td><%= order.quantity %></td>
-                <td>$<%= order.product ? order.product.price.toFixed(2) : 'N/A' %></td> <!-- Price formatted -->
-                <td>$<%= order.product ? (order.quantity * order.product.price).toFixed(2) : 'N/A' %></td> <!-- Total formatted -->
-                <td><%= new Date(order.timestamp).toLocaleDateString() %></td> <!-- Simplified Date Format -->
+                <td>₹<%= order.product ? order.product.price.toFixed(2) : 'N/A' %></td>
+                <td>₹<%= order.product ? (order.quantity * order.product.price).toFixed(2) : 'N/A' %></td>
+                <td><%= new Date(order.timestamp).toLocaleDateString() %></td>
               </tr>
             <% }) %>
           </tbody>
         </table>
       </div>
+
     <% } else { %>
       <div class="alert alert-info text-center">
         <h4>No orders found.</h4>
@@ -53,3 +71,66 @@
 </div>
 
 <%- include('partials/footer') %>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const orders = <%- JSON.stringify(orders || []) %>;
+
+  const revenueMap = {};
+  orders.forEach(order => {
+    if (order.product) {
+      const product = order.product.pname;
+      const revenue = order.quantity * order.product.price;
+      if (!revenueMap[product]) {
+        revenueMap[product] = 0;
+      }
+      revenueMap[product] += revenue;
+    }
+  });
+
+  const productNames = Object.keys(revenueMap);
+  const revenueData = Object.values(revenueMap);
+
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: 'Revenue (₹)',
+        data: revenueData,
+        backgroundColor: '#28a745',
+        borderColor: '#1e7e34',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Total Revenue per Product',
+          font: { size: 14 }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: value => '₹' + value.toFixed(2),
+            font: { size: 12 }
+          }
+        },
+        x: {
+          ticks: {
+            font: { size: 12 }
+          }
+        }
+      }
+    }
+  });
+</script>
